@@ -1,0 +1,50 @@
+<div class="container">
+    <form ngForm #f="ngForm">
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input 
+                ngModel 
+                required 
+                minlength="3" 
+                pattern="banana" 
+                name="firstName" 
+                #firstName="ngModel"  
+                (change)="log(firstName)" 
+                id="firstName" 
+                type="text" 
+                class="form-control">
+        <div 
+            class="alert alert-danger" 
+            *ngIf="firstName.touched && !firstName.valid">
+            <div *ngIf="firstName.errors?.required">
+                First Name is required
+            </div>
+            <div *ngIf="firstName.errors?.minlength">
+                First Name should be minimum {{firstName.errors.minlength.requiredLength}} characters
+            </div>
+            <div *ngIf="firstName.errors?.pattern">
+                First Name doesn't match the pattern
+            </div>
+        </div>
+        </div>
+        <div class="form-group">
+          <label for="comment">Comment</label>
+          <textarea  id="comment" cols="30" rows="10" class="form-control"></textarea>
+        </div>
+        <div class="checkbox">
+            <label for="">
+                <input type="checkbox" ngModel name="isSubcribed"> checkbox
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="formContact"> Contact</label>
+            <select name="" id="" class="form-control">
+                <option *ngFor="let contact of contactMethods" value=""></option>
+            </select>
+        </div>
+        <p>
+            {{ f.value | json}}
+        </p>
+        <button class="btn btn-primary">Submit</button>
+      </form>
+</div>
