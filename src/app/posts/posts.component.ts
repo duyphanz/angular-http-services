@@ -1,3 +1,4 @@
+import { InputError } from './../common/bad-input';
 import { AppError } from './../common/app-error';
 import { NotFoundError } from './../common/not-found-error';
 import { PostService } from './../services/post.service';
@@ -18,7 +19,7 @@ export class PostsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.service.getPosts()
+    this.service.getData()
     .subscribe(response => {
       this.posts = response.json()
       //console.log(response.json())
@@ -28,7 +29,7 @@ export class PostsComponent implements OnInit {
   createPost(input: HTMLInputElement) {
     let post = { title: input.value}
 
-    this.service.createPost(post)
+    this.service.create(post)
     .subscribe(
       response => {
       post['id'] = response.json().id;
@@ -36,14 +37,14 @@ export class PostsComponent implements OnInit {
       console.log(response.json())
       
       },
-      (error: Response) => {
-        if(error.status === 404) alert('Bad request')
-        else alert('An unexpected error occurred')
+      (error: AppError) => {
+        if(error instanceof InputError) alert('Bad request')
+        else throw error
       })
   }
 
   deletePost(post) {
-    this.service.deletePost(post)
+    this.service.delete(post.id)
     .subscribe(
       response => {
       let index = this.posts.indexOf(post);
@@ -55,7 +56,7 @@ export class PostsComponent implements OnInit {
         if(error instanceof NotFoundError) {
           alert('This post has already been deleted')
         }
-        else alert('An unexpected error occurred')
+        else throw error
       })
   }
   
